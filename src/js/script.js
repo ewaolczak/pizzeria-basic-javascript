@@ -106,6 +106,9 @@
       thisProduct.priceElem = thisProduct.element.querySelector(
         select.menuProduct.priceElem
       );
+      thisProduct.imageWrapper = thisProduct.element.querySelector(
+        select.menuProduct.imageWrapper
+      );
     }
 
     initAccordion() {
@@ -174,18 +177,31 @@
           console.log(optionId, option);
 
           // check if there is param with a name of paramId in formData and if it includes optionId
-          if (formData[paramId] && formData[paramId].includes(optionId)) {
+          const selectedOption =
+            formData[paramId] && formData[paramId].includes(optionId);
+          const optionImage = thisProduct.imageWrapper.querySelector(
+            `.${paramId}-${optionId}`
+          );
+
+          if (selectedOption) {
             // check if the option is not default
             if (optionId.default != true) {
               // add option price to price variable
               price += option.price;
-              console.log('price', price);
             }
           } else {
             // check if the option is default
             if (optionId.default == true) {
               // reduce price variable
               price -= option.price;
+            }
+          }
+
+          if (optionImage) {
+            if (selectedOption) {
+              optionImage.classList.add(classNames.menuProduct.imageVisible);
+            } else {
+              optionImage.classList.remove(classNames.menuProduct.imageVisible);
             }
           }
         }
