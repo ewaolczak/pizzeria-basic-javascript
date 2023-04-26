@@ -288,29 +288,33 @@
 
       // covert form to object structure e.g. { sauce: ['tomato'], toppings: ['olives', 'redPeppers']}
       const formData = utils.serializeFormToObject(thisProduct.form);
+
+      // set params
       const params = {};
 
-      // FIRST LOOP: for every category (param)...
+      // for every category (param)...
       for (let paramId in thisProduct.data.params) {
         // determine param value, e.g. paramId = 'toppings', param = { label: 'Toppings', type: 'checkboxes'... }
         const param = thisProduct.data.params[paramId];
+        // console.log(paramId, param);
 
-        // create category param in params const eg. params = { ingredients: { name: 'Ingredients', options: {}}}
+        // create category param in params const eg. params = { ingredients: { name: 'Ingredients', options{}}}
         params[paramId] = {
           label: param.label,
           options: {}
         };
 
-        // SECOND LOOP: for every option in this category
+        // for every option in this category
         for (let optionId in param.options) {
           // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }
           const option = param.options[optionId];
 
-          // check if there is param with a name of paramId in formData and if it includes optionId
+          // sprawdź, czy opcja (optionId) kategirii (paramId) jest wybrana w formularzu (formData)
           const optionSelected =
             formData[paramId] && formData[paramId].includes(optionId);
 
           if (optionSelected) {
+            // option is selected
             params[paramId].options[optionId] = option.label;
           }
         }
@@ -422,6 +426,8 @@
       thisCart.dom.productList = thisCart.dom.wrapper.querySelector(
         select.cart.productList
       );
+
+      console.log('thisCart.dom.toggleTigger', thisCart.dom.toggleTrigger);
     }
 
     initAction() {
@@ -432,13 +438,13 @@
       });
     }
 
-    add(menuProduct, params) {
+    add(menuProduct) {
       const thisCart = this;
 
       console.log('adding product', menuProduct);
 
       /* generate HTML based on template */
-      const generatedHTML = templates.cartProduct(params);
+      const generatedHTML = templates.cartProduct(menuProduct);
 
       /* transform HTML code to DOM element */
       const generatedDOM = utils.createDOMFromHTML(generatedHTML);
